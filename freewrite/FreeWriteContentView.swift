@@ -38,16 +38,27 @@ struct FreeWriteContentView: View {
             if !sensoryElements.isEmpty {
                 VStack(alignment: .leading) {
                     ForEach(sensoryElements) { element in
-                        HStack(spacing: 0) {
-                            // Indicador de elemento sensorial
+                        // Contenedor para el indicador de elemento sensorial
+                        ZStack {
+                            // Fondo con borde sutil
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(colorScheme == .dark ? Color.black : Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                )
+                                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                                .frame(width: 28, height: 28)
+                            
+                            // Icono
                             Image(systemName: element.type == .spotify ? "music.note" : "photo")
-                                .font(.system(size: 10))
-                                .foregroundColor(colorScheme == .dark ? .gray : .gray)
-                                .frame(width: 20, height: 20)
-                                .background(colorScheme == .dark ? Color.black : Color.white)
+                                .font(.system(size: 12))
+                                .foregroundColor(element.type == .spotify ? Color.green.opacity(0.8) : Color.orange.opacity(0.8))
                         }
-                        .padding(.top, 100 + CGFloat(sensoryElements.firstIndex(where: { $0.id == element.id }) ?? 0) * 30)
+                        .padding(.top, 100 + CGFloat(sensoryElements.firstIndex(where: { $0.id == element.id }) ?? 0) * 40)
                         .padding(.leading, 10)
+                        // Añadir tooltip con el título del elemento
+                        .help(element.title)
                     }
                     Spacer()
                 }
@@ -180,19 +191,31 @@ extension FreeWriteContentView {
     func addSpotifyElement() {
         guard !spotifyURL.isEmpty, !spotifyTitle.isEmpty else { return }
         
+        // Calcular una posición para este ejemplo
         // En una implementación real, aquí obtendríamos la posición actual del cursor
-        // Para este ejemplo, usamos una posición simulada
-        let cursorPosition = 100
+        let cursorPosition = 100 + (sensoryElements.count * 50)
         
-        let newElement = SensoryElement(
-            id: UUID(),
-            type: .spotify,
-            url: spotifyURL,
-            title: spotifyTitle,
-            position: cursorPosition
-        )
+        // Crear y añadir el elemento con animación
+        withAnimation(.spring()) {
+            let newElement = SensoryElement(
+                id: UUID(),
+                type: .spotify,
+                url: spotifyURL,
+                title: spotifyTitle,
+                position: cursorPosition
+            )
+            
+            sensoryElements.append(newElement)
+            
+            // Actualizar el documento actual
+            currentDocument.sensoryElements = sensoryElements
+        }
         
-        sensoryElements.append(newElement)
+        // Mostrar notificación de éxito
+        let title = spotifyTitle
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            print("[✓] Añadido elemento de Spotify: \(title)")
+        }
         
         // Limpiar los campos
         spotifyURL = ""
@@ -204,19 +227,31 @@ extension FreeWriteContentView {
     func addPinterestElement() {
         guard !pinterestURL.isEmpty, !pinterestTitle.isEmpty else { return }
         
+        // Calcular una posición para este ejemplo
         // En una implementación real, aquí obtendríamos la posición actual del cursor
-        // Para este ejemplo, usamos una posición simulada
-        let cursorPosition = 200
+        let cursorPosition = 100 + (sensoryElements.count * 50)
         
-        let newElement = SensoryElement(
-            id: UUID(),
-            type: .pinterest,
-            url: pinterestURL,
-            title: pinterestTitle,
-            position: cursorPosition
-        )
+        // Crear y añadir el elemento con animación
+        withAnimation(.spring()) {
+            let newElement = SensoryElement(
+                id: UUID(),
+                type: .pinterest,
+                url: pinterestURL,
+                title: pinterestTitle,
+                position: cursorPosition
+            )
+            
+            sensoryElements.append(newElement)
+            
+            // Actualizar el documento actual
+            currentDocument.sensoryElements = sensoryElements
+        }
         
-        sensoryElements.append(newElement)
+        // Mostrar notificación de éxito
+        let title = pinterestTitle
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            print("[✓] Añadido elemento de Pinterest: \(title)")
+        }
         
         // Limpiar los campos
         pinterestURL = ""
