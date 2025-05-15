@@ -1,16 +1,24 @@
 //
 //  freewriteApp.swift
-//  freewrite
+//  freewrite (Vibe Reading)
 //
 //  Created by thorfinn on 2/14/25.
+//  Modified on 5/15/25.
 //
 
 import SwiftUI
+
+// Enum para los modos de la aplicación
+enum AppMode {
+    case reading
+    case writing
+}
 
 @main
 struct freewriteApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @AppStorage("colorScheme") private var colorSchemeString: String = "light"
+    @State private var selectedMode: AppMode? = nil
     
     init() {
         // Register Lato font
@@ -21,9 +29,19 @@ struct freewriteApp: App {
      
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .toolbar(.hidden, for: .windowToolbar)
-                .preferredColorScheme(colorSchemeString == "dark" ? .dark : .light)
+            Group {
+                if selectedMode == nil {
+                    StartView(selectedMode: $selectedMode)
+                        .toolbar(.hidden, for: .windowToolbar)
+                } else if selectedMode == .writing {
+                    FreeWriteContentView(selectedMode: $selectedMode)
+                        .toolbar(.hidden, for: .windowToolbar)
+                } else if selectedMode == .reading {
+                    ReadingView(selectedMode: $selectedMode)
+                        .toolbar(.hidden, for: .windowToolbar)
+                }
+            }
+            .preferredColorScheme(colorSchemeString == "dark" ? .dark : .light)
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1100, height: 600)

@@ -44,7 +44,6 @@ struct HeartEmoji: Identifiable {
 }
 
 struct ContentView: View {
-    @Binding var selectedMode: AppMode?
     private let headerString = "\n\n"
     @State private var entries: [HumanEntry] = []
     @State private var text: String = ""  // Remove initial welcome text since we'll handle it in createNewEntry
@@ -385,50 +384,13 @@ struct ContentView: View {
     
     @State private var viewHeight: CGFloat = 0
     
-    @State private var isHoveringBackButton = false
-    
     var body: some View {
         let buttonBackground = colorScheme == .light ? Color.white : Color.black
         let navHeight: CGFloat = 68
         let textColor = colorScheme == .light ? Color.gray : Color.gray.opacity(0.8)
         let textHoverColor = colorScheme == .light ? Color.black : Color.white
         
-        ZStack {
-            // Botón de regreso en la esquina superior izquierda
-            VStack {
-                HStack {
-                    Button(action: {
-                        // Guardar el contenido actual antes de volver
-                        if let currentId = selectedEntryId,
-                           let entryIndex = entries.firstIndex(where: { $0.id == currentId }) {
-                            saveEntry(entries[entryIndex], text: text)
-                        }
-                        selectedMode = nil
-                    }) {
-                        Image(systemName: "arrow.left")
-                            .font(.system(size: 16))
-                            .foregroundColor(isHoveringBackButton ? textHoverColor : textColor)
-                            .padding(8)
-                            .background(buttonBackground)
-                            .cornerRadius(6)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .onHover { hovering in
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            isHoveringBackButton = hovering
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding(12)
-                
-                Spacer()
-            }
-            .zIndex(10)
-            
-            // Contenido principal
-            HStack(spacing: 0) {
+        HStack(spacing: 0) {
             // Main content
             ZStack {
                 Color(colorScheme == .light ? .white : .black)
@@ -1448,5 +1410,5 @@ extension NSView {
 }
 
 #Preview {
-    ContentView(selectedMode: .constant(.writing))
+    ContentView()
 }

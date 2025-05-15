@@ -8,12 +8,6 @@
 
 import SwiftUI
 
-// Enum para los modos de la aplicación
-enum AppMode {
-    case reading
-    case writing
-}
-
 struct StartView: View {
     @Binding var selectedMode: AppMode?
     @Environment(\.colorScheme) var colorScheme

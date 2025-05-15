@@ -10,6 +10,8 @@ import SwiftUI
 
 struct FreeWriteContentView: View {
     @Binding var selectedMode: AppMode?
+    @Environment(\.colorScheme) var colorScheme
+    @State private var isHoveringBackButton = false
     
     var body: some View {
         ZStack {
@@ -24,12 +26,19 @@ struct FreeWriteContentView: View {
                     }) {
                         Image(systemName: "arrow.left")
                             .font(.system(size: 16))
-                            .foregroundColor(.gray)
+                            .foregroundColor(isHoveringBackButton ? 
+                                            (colorScheme == .dark ? .white : .black) : 
+                                            (colorScheme == .dark ? .gray : .gray))
                             .padding(8)
-                            .background(Color(NSColor.windowBackgroundColor))
+                            .background(colorScheme == .dark ? Color.black : Color.white)
                             .cornerRadius(6)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    .onHover { hovering in
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isHoveringBackButton = hovering
+                        }
+                    }
                     
                     Spacer()
                 }
