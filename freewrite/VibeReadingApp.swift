@@ -28,7 +28,7 @@ struct VibeReadingApp: App {
                     StartView(selectedMode: $selectedMode)
                         .toolbar(.hidden, for: .windowToolbar)
                 } else if selectedMode == .writing {
-                    ContentView(selectedMode: $selectedMode)
+                    FreeWriteContentView(selectedMode: $selectedMode)
                         .toolbar(.hidden, for: .windowToolbar)
                 } else if selectedMode == .reading {
                     ReadingView(selectedMode: $selectedMode)
