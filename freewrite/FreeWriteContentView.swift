@@ -34,6 +34,26 @@ struct FreeWriteContentView: View {
             // Contenido principal de FreeWrite (la aplicación original)
             ContentView()
             
+            // Marcadores visuales para elementos sensoriales (en el margen izquierdo)
+            if !sensoryElements.isEmpty {
+                VStack(alignment: .leading) {
+                    ForEach(sensoryElements) { element in
+                        HStack(spacing: 0) {
+                            // Indicador de elemento sensorial
+                            Image(systemName: element.type == .spotify ? "music.note" : "photo")
+                                .font(.system(size: 10))
+                                .foregroundColor(colorScheme == .dark ? .gray : .gray)
+                                .frame(width: 20, height: 20)
+                                .background(colorScheme == .dark ? Color.black : Color.white)
+                        }
+                        .padding(.top, 100 + CGFloat(sensoryElements.firstIndex(where: { $0.id == element.id }) ?? 0) * 30)
+                        .padding(.leading, 10)
+                    }
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            }
+            
             // Overlay para controles de navegación y elementos sensoriales
             VStack(spacing: 0) {
                 // Barra superior con botón de regreso

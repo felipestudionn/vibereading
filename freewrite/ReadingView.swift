@@ -152,31 +152,35 @@ struct EnrichedTextView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 24) {
             // Indicadores laterales
             VStack(alignment: .trailing, spacing: 0) {
                 ForEach(elements) { element in
                     if let position = calculateYPosition(for: element) {
-                        Group {
+                        Button(action: {
+                            onElementTapped(element)
+                        }) {
                             if element.type == .spotify {
                                 Image(systemName: "music.note")
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.gray)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(colorScheme == .dark ? .gray : .gray)
                             } else {
                                 Image(systemName: "photo")
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.gray)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(colorScheme == .dark ? .gray : .gray)
                             }
                         }
+                        .buttonStyle(PlainButtonStyle())
                         .padding(.top, position - 6) // Ajuste para centrar
-                        .onTapGesture {
-                            onElementTapped(element)
-                        }
+                        .padding(.horizontal, 5) // Añadir padding horizontal para mayor área de toque
+                        .padding(.vertical, 5) // Añadir padding vertical para mayor área de toque
+                        .contentShape(Rectangle())
                     }
                 }
                 Spacer()
             }
-            .frame(width: 14)
+            .frame(width: 20)
+            .padding(.leading, 15)
             
             // Texto principal
             Text(text)
@@ -184,6 +188,7 @@ struct EnrichedTextView: View {
                 .lineSpacing(8)
                 .foregroundColor(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.trailing, 50) // Añadir espacio a la derecha para equilibrar
         }
     }
     
